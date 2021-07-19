@@ -368,7 +368,6 @@ class RandomHorizontalFlip(object):
         if self.p < 0.5:
             #EVENT
             if isinstance(img, np.ndarray):
-                #todo da controllare
                 img = np.flip(img, axis=-1)
 
             else:

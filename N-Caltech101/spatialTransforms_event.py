@@ -117,7 +117,6 @@ class Normalize(object):
         Returns:
             Tensor: Normalized image.
         """
-        # TODO: make efficient
 
         mean = self.mean
         std = self.std
@@ -205,9 +204,7 @@ class CenterCrop(object):
         x1 = int(round((w - tw) / 2.))
         y1 = int(round((h - th) / 2.))
 
-        #todo da controllare
         return img[:, y1:y1 + th, x1:x1 + tw]
-        #return img[:, x1:x1 + tw, y1:y1 + th] old
 
 
     def randomize_parameters(self):
@@ -240,12 +237,7 @@ class RandomCrop(object):
 
         self.top = random.randint(0, h - th)
         self.left = random.randint(0, w - tw)
-
-        #img = TF.crop(img, self.top, self.left, 224, 224)
-
-        #todo da controllare
         img = img[:, self.top : self.top+th, self.left:self.left + th]
-        #img = img[:, self.left : self.left+th, self.top:self.top + th] old
         return img
 
 
@@ -259,7 +251,6 @@ class Rotation(object):
         self.angles = [0, 90, 180, 270]
 
     def __call__(self, img, rot):
-        #todo DA CONTROLLARE
         img = np.rot90(img, k=rot, axes=(1, 2))
         return img
 
@@ -279,8 +270,6 @@ class RandomHorizontalFlip(object):
         """
         self.p = random.random()
         if self.p < 0.5:
-            #img = img.transpose(Image.FLIP_LEFT_RIGHT)
-            #todo da controllare
             img = np.flip(img, axis=1)
         return img
 

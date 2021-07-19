@@ -45,7 +45,6 @@ def make_dataset(root, path_txt, modality, args, type_of_file):
             continue
 
         path_samples = root + "/" + samples
-        #import pdb; pdb.set_trace()
         path_samples = path_samples.replace(".bin", type_of_file)
         path_samples = path_samples.replace("\n", "")
 

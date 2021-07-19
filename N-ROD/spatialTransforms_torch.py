@@ -53,10 +53,7 @@ def crop_boxes(images, boxes):
         new_images = images[:, :, box[1]:box[3] + 1, box[0]:box[2] + 1]
     else:
         # Boxes are different, we need to perform a crop at a time
-        # TODO: is there a smart way to batch-parallelize this?
-        #   Maybe roi_pool from Mask-RCNN or F.grid_sample
-        #   Even manually building the indexes of pixels to select could
-        #   potentially be fast
+
         new_images = []
         for im, box in zip(images, boxes):
             new_images.append(im[:, box[1]:box[3] + 1, box[0]:box[2] + 1])
@@ -139,7 +136,6 @@ class Scale(nn.Module):
         new_img = []
         new_roi = []
 
-        # TODO(marco): Is there a smart way to batch-parallelize this?
         for sample_img, sample_roi in zip(img, roi):
             img_cropped = sample_img[:, sample_roi[1]:sample_roi[3] + 1,
                           sample_roi[0]:sample_roi[2] + 1]
@@ -196,7 +192,6 @@ class Scale_ReplicateBorder(Scale):
         device = img.device
         new_img = []
 
-        # TODO(marco): Is there a smart way to batch-parallelize this?
         for sample_img, sample_roi in zip(img, roi):
             img_cropped = sample_img[:, sample_roi[1]:sample_roi[3] + 1,
                           sample_roi[0]:sample_roi[2] + 1]

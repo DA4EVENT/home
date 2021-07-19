@@ -214,7 +214,7 @@ class Scale_ReplicateBorder(object):
             c, h, w = img.shape
             if (w <= h and w == self.size) or (h <= w and h == self.size):
                 img =  img
-            if w > h: #in questo modo scaliamo sul lato lungo
+            if w > h:
                 axis = 1
                 ow = self.size
                 oh = int(self.size * h / w)
@@ -231,11 +231,8 @@ class Scale_ReplicateBorder(object):
 
             dim[0] = n_repeat
             dim[len(dim)-1] = n_repeat
-            #print("Original size", h,w)
-            #print("New size after scale", oh,ow)
             img = np.repeat(img, dim, axis=axis)
             _, n_h, n_w = img.shape
-            #print("New size after Replicate Border", n_h, n_w)
 
             return img
 
@@ -357,7 +354,6 @@ class RandomHorizontalFlip(object):
         if self.p < 0.5:
             #EVENT
             if isinstance(img, np.ndarray):
-                #todo da controllare
                 img = np.flip(img, axis=-1)
 
             else:

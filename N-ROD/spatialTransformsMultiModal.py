@@ -85,7 +85,6 @@ class Normalize(object):
     """
 
     def __init__(self, mean, std):
-        #todo per il momento uso la stessa normalizzazione per entrambi
         self.mean = mean
         self.std = std
 
