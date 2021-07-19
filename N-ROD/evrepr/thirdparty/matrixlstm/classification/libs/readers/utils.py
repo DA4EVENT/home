@@ -16,7 +16,6 @@ chunkparams = namedtuple('chunkparams', ['delta_t', 'min_delta_t', 'min_n_events
 def get_file_format(files, reader_type='classification'):
 
     # Takes the first file in the list as a sample to infer file extension
-    # TODO: implement a more robust method to infer file format
 
     sample_file = None
     if isinstance(files, list):

@@ -71,7 +71,7 @@ class Caltech101(Dataset):
     def __init__(self, root: str, path_txt: str,
                  transform: Optional[Callable] = None,
                  do_rot=False, args=None,
-                 train=True,  # TODO(marco) this could be removed
+                 train=True,
                  isSource=True):
 
         self.modality = args.modality

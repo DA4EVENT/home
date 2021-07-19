@@ -15,9 +15,9 @@ def make_dataset_ROD(root, path_txt, modality, type_of_file, type_data):
         sample = line.strip().split(' ')[0]
         path = os.path.join(root, sample)
 
-        if type_data == "Real": #todo deve essere adattato una volta che abbiamo i dati completi
+        if type_data == "Real":
             name = "depthcrop" if modality == "depth" else "crop"
-            path_samples = path.replace('***', name) #todo da capire se va bene
+            path_samples = path.replace('***', name)
             path_samples = path_samples.replace('???', modality)
         else:
             path_samples = path.replace("***", modality)
@@ -84,7 +84,7 @@ class ROD(Dataset):
     def __init__(self, root: str, path_txt: str,
                  transform: Optional[Callable] = None,
                  do_rot=False, args=None,
-                 train=True,  # TODO(marco) this could be removed
+                 train=True,
                  isSource=True):
 
         self.modality = args.modality

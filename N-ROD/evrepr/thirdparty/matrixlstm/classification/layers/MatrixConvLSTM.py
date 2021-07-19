@@ -150,8 +150,6 @@ class MatrixConvLSTM(MatrixLSTM):
             # Construct a dense frame [batch_size, Tmax, C, H, W]
             x_dense = self.ungroup_full_dense(rf_batch_groups, rf_idx, batch_size)
 
-        # FIXME hc_0 is not supported
-        # TODO implement not overlapping rf splitting also for hc
         if hc_0 is not None:
             raise NotImplementedError("hc_0 argument not supported yet!")
 

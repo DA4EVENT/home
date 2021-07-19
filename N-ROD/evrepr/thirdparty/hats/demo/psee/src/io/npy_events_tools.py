@@ -4,7 +4,7 @@
 Defines some tools to handle events, mimicking dat_events_tools.py.
 In particular :
     -> defines functions to read events from binary .npy files using numpy
-    -> defines functions to write events to binary .dat files using numpy (TODO later)
+    -> defines functions to write events to binary .dat files using numpy
 
 Copyright: (c) 2015-2019 Prophesee
 """

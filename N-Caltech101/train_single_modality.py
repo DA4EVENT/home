@@ -69,7 +69,7 @@ print("DEVICE", device)
 
 from spatialTransforms import (Compose, ToTensor, CenterCrop, Normalize,
                                RandomHorizontalFlip, RandomCrop, Rotation, Scale_ReplicateBorder)
-normalize = Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]) #todo remove
+normalize = Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 
 #train_transform = MyTransformer([int((256 - 224) / 2), int((256 - 224) / 2)], False)
 if args.dataset == "ncaltech101":
