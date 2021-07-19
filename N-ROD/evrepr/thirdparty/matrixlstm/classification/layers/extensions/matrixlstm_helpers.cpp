@@ -211,7 +211,6 @@ group_rf(torch::Tensor features, torch::Tensor rf_ids, torch::Tensor lengths, in
 
         // b_groups is a list of lists, we convert the inner lists by stacking
         // events within the same receptive field
-        // TODO Do we have to free b_groups afterwards?
         std::vector<torch::Tensor> b_tensor_groups{};
         for (int64_t rf = 0; rf < w*h; ++rf){
             if (!b_groups[rf].empty()){

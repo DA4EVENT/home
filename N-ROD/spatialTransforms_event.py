@@ -250,7 +250,6 @@ class Rotation(object):
         self.angles = [0, 90, 180, 270]
 
     def __call__(self, img, rot):
-        #todo DA CONTROLLARE
         img = np.rot90(img, k=rot, axes=(1, 2))
         return img
 

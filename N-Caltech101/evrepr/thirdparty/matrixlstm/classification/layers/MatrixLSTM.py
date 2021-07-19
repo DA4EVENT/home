@@ -492,8 +492,6 @@ class MatrixLSTM(nn.Module):
 
         # We process each not overlapping group separately
         rf_gr_lstm_out = []
-        # FIXME hc_0 is not supported
-        # TODO implement not overlapping rf splitting also for hc
         if hc_0 is not None:
             raise NotImplementedError("hc_0 argument not supported yet!")
 

@@ -45,7 +45,6 @@ def make_dataset(root, path_txt, modality, args, type_of_file):
             continue
 
         path_samples = root + "/" + samples
-        #import pdb; pdb.set_trace()
         path_samples = path_samples.replace(".bin", type_of_file)
         path_samples = path_samples.replace("\n", "")
 
@@ -72,7 +71,7 @@ class Caltech101(Dataset):
     def __init__(self, root: str, path_txt: str,
                  transform: Optional[Callable] = None,
                  do_rot=False, args=None,
-                 train=True,  # TODO(marco) this could be removed
+                 train=True,
                  isSource=True):
 
         self.modality = args.modality
