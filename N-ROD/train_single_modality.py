@@ -261,10 +261,6 @@ for op in optims_list:
 for epoch in range(1, args.epoch + 1):
     print("Epoch {} / {}".format(epoch, args.epoch))
     # ========================= TRAINING =========================
-
-    #lr = 0.1 * (
-    #        args.lr ** np.sum(epoch >= np.array(30)))
-
     # Train source (recognition)
     train_loader_source_rec_iter = train_loader_source
     # Train target (entropy)
@@ -425,8 +421,6 @@ for epoch in range(1, args.epoch + 1):
                     img, rot_label = map_to_device(device, (img, rot_label))
 
                     # Compute features (with pooling)
-                    # TODO(marco): is it ok that we have just one set of
-                    #   transforms for the rotation task?
                     img = eventHead(img, transform=th_train_transform_with_Rot,
                                     rot=rot_label)
                     feat, _ = netG(img)
@@ -487,7 +481,6 @@ for epoch in range(1, args.epoch + 1):
     # todo mi sa che va fixato per dataParallel
         if not os.path.exists(args.snapshot):
             os.mkdir(args.snapshot)
-        #import pdb; pdb.set_trace()
         if eventHead.module.trainable:
             torch.save(eventHead.state_dict(), os.path.join(
                 args.snapshot,
@@ -502,7 +495,6 @@ for epoch in range(1, args.epoch + 1):
                    os.path.join(args.snapshot, hp_string + "_netF_rot_epoch" + str(epoch) + ".pth"))
 
 
-#args.epoch = 30 ### OOOO
 
 print("Starting Test on target...")
 with open(os.path.join(os.path.join(args.experiment, hp_string), 'val_precision.txt'), 'a+') as f:

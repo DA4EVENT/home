@@ -108,7 +108,6 @@ test_set_target = loaders(args.data_root_target, path_txt=args.test_file_target,
 """
     Prepare data loaders   
 """
-#args.batch_size = 16 # da togliere by Mirco
 # Source training recognition
 train_loader_source = DataLoader(train_set_source,
                                  shuffle=True,
@@ -333,10 +332,8 @@ for epoch in range(1, args.epoch + 1):
     if epoch % 5 == 0:
         # if epoch % 1 == 0:
         # SAVE THE MODEL
-        # todo mi sa che va fixato per dataParallel
         if not os.path.exists(args.snapshot):
             os.mkdir(args.snapshot)
-        # import pdb; pdb.set_trace()
         if eventHead.module.trainable:
             torch.save(eventHead.state_dict(), os.path.join(
                 args.snapshot,

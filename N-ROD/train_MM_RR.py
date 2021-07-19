@@ -72,7 +72,6 @@ from spatialTransforms import (Compose, ToTensor, CenterCrop, Scale_ReplicateBor
                                RandomHorizontalFlip, RandomCrop, Rotation)
 normalize = Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], imagenet_norm = args.imagenet_norm)
 
-#todo mirco Da capire come gestire il normalize
 
 #todo mirco da confermare che le immagini sono già con il bordo replicato
 train_transform = Compose([Scale_ReplicateBorder(256), RandomHorizontalFlip(), RandomCrop(224), ToTensor(),normalize])
@@ -485,10 +484,8 @@ for epoch in range(1, args.epoch + 1):
     if epoch % 5 == 0:
         # if epoch % 1 == 0:
         # SAVE THE MODEL
-        # todo mi sa che va fixato per dataParallel
         if not os.path.exists(args.snapshot):
             os.mkdir(args.snapshot)
-        # import pdb; pdb.set_trace()
         if eventHead.module.trainable:
             torch.save(eventHead.state_dict(), os.path.join(
                 args.snapshot,

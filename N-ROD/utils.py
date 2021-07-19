@@ -154,33 +154,7 @@ def make_paths(dataset = "Cifar10", source = 'Real', target='Real',args=None):
     train_file_source, test_file_source = None, None
     train_file_target, test_file_target = None, None
 
-    if dataset in ["caltech101", "ncaltech101"]:
-        if source in ["Real", "Syn", "Sim"]: #todo da fixare
-            args.data_root_source = "./CALTECH101/"
-            args.train_file_source = "../Splits_N-Caltech101/train.txt"
-            args.val_file_source = "../Splits_N-Caltech101/val.txt"
-            args.test_file_source = "../Splits_N-Caltech101/test.txt"
-
-        if target in ["Real", "Syn", "Sim"]: #todo da fixare
-            args.data_root_target = "./CALTECH101/"
-            args.train_file_target = "../Splits_N-Caltech101/train.txt"
-            args.val_file_target = "../Splits_N-Caltech101/val.txt"
-            args.test_file_target = "../Splits_N-Caltech101/test.txt"
-
-    elif dataset in ["cifar10", "cifar10dvs"]:
-        if source in ["Real", "Syn","Sim"]:
-            args.data_root_source = "./CIFAR10"
-            args.train_file_source = "./CIFAR10/train_split.txt"
-            args.val_file_source = "./CIFAR10/test_split.txt"
-            args.test_file_source = "./CIFAR10/test_split.txt"
-
-        if target in ["Real", "Syn"]:
-            args.data_root_target = "./CIFAR10"
-            args.train_file_target = "./CIFAR10/train_split.txt"
-            args.val_file_target = "./CIFAR10/test_split.txt"
-            args.test_file_target = "./CIFAR10/test_split.txt"
-
-    elif dataset in ["ROD"]:
+    if dataset in ["ROD"]:
         args.class_num = 51
         if source in ["Real", "Syn"]:
             args.data_root_source = "./ROD_evrepr/"

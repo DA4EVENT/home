@@ -70,9 +70,7 @@ from spatialTransforms import (Compose, ToTensor, CenterCrop, Scale_ReplicateBor
                                RandomHorizontalFlip, RandomCrop, Rotation)
 normalize = Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], imagenet_norm = args.imagenet_norm)
 
-#todo mirco Da capire come gestire il normalize
 
-#todo mirco da confermare che le immagini sono già con il bordo replicato
 train_transform = Compose([Scale_ReplicateBorder(256), RandomHorizontalFlip(), RandomCrop(224), ToTensor(),normalize])
 train_transform_with_Rot = Compose([Scale_ReplicateBorder(256), RandomHorizontalFlip(), RandomCrop(224), Rotation(), ToTensor(),normalize])
 test_transform = Compose([Scale_ReplicateBorder(256),CenterCrop(224),ToTensor(),normalize])
