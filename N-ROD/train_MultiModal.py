@@ -470,10 +470,8 @@ for epoch in range(1, args.epoch + 1):
 
     if epoch % 5 == 0:
         # SAVE THE MODEL
-        # todo mi sa che va fixato per dataParallel
         if not os.path.exists(args.snapshot):
             os.mkdir(args.snapshot)
-        # import pdb; pdb.set_trace()
         if eventHead.module.trainable:
             torch.save(eventHead.state_dict(), os.path.join(
                 args.snapshot,

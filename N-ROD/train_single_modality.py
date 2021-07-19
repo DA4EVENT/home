@@ -478,7 +478,6 @@ for epoch in range(1, args.epoch + 1):
     if epoch % 5 == 0:
     #if epoch % 1 == 0:
     #SAVE THE MODEL
-    # todo mi sa che va fixato per dataParallel
         if not os.path.exists(args.snapshot):
             os.mkdir(args.snapshot)
         if eventHead.module.trainable:
