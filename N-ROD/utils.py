@@ -158,29 +158,29 @@ def make_paths(dataset = "Cifar10", source = 'Real', target='Real',args=None):
     if node == "tiche":
         if dataset in ["caltech101", "ncaltech101"]:
             if source in ["Real", "Syn", "Sim"]: #todo da fixare
-                args.data_root_source = "/home/chiarap/event-data/CALTECH101/"
-                args.train_file_source = "/home/chiarap/event-data/CALTECH101/CALTECH101_split/train.txt"
-                args.val_file_source = "/home/chiarap/event-data/CALTECH101/CALTECH101_split/val.txt"
-                args.test_file_source = "/home/chiarap/event-data/CALTECH101/CALTECH101_split/test.txt"
+                args.data_root_source = "./CALTECH101/"
+                args.train_file_source = "./CALTECH101/CALTECH101_split/train.txt"
+                args.val_file_source = "./CALTECH101/CALTECH101_split/val.txt"
+                args.test_file_source = "./CALTECH101/CALTECH101_split/test.txt"
 
             if target in ["Real", "Syn", "Sim"]: #todo da fixare
-                args.data_root_target = "/home/chiarap/event-data/CALTECH101/"
-                args.train_file_target = "/home/chiarap/event-data/CALTECH101/CALTECH101_split/train.txt"
-                args.val_file_target = "/home/chiarap/event-data/CALTECH101/CALTECH101_split/val.txt"
-                args.test_file_target = "/home/chiarap/event-data/CALTECH101/CALTECH101_split/test.txt"
+                args.data_root_target = "./CALTECH101/"
+                args.train_file_target = "./CALTECH101/CALTECH101_split/train.txt"
+                args.val_file_target = "./CALTECH101/CALTECH101_split/val.txt"
+                args.test_file_target = "./CALTECH101/CALTECH101_split/test.txt"
 
         elif dataset in ["cifar10", "cifar10dvs"]:
             if source in ["Real", "Syn","Sim"]:
-                args.data_root_source = "/data/event-data/CIFAR10"
-                args.train_file_source = "/data/event-data/CIFAR10/train_split.txt"
-                args.val_file_source = "/data/event-data/CIFAR10/test_split.txt"
-                args.test_file_source = "/data/event-data/CIFAR10/test_split.txt"
+                args.data_root_source = "./CIFAR10"
+                args.train_file_source = "./CIFAR10/train_split.txt"
+                args.val_file_source = "./CIFAR10/test_split.txt"
+                args.test_file_source = "./CIFAR10/test_split.txt"
 
             if target in ["Real", "Syn"]:
-                args.data_root_target = "/data/event-data/CIFAR10"
-                args.train_file_target = "/data/event-data/CIFAR10/train_split.txt"
-                args.val_file_target = "/data/event-data/CIFAR10/test_split.txt"
-                args.test_file_target = "/data/event-data/CIFAR10/test_split.txt"
+                args.data_root_target = "./CIFAR10"
+                args.train_file_target = "./CIFAR10/train_split.txt"
+                args.val_file_target = "./CIFAR10/test_split.txt"
+                args.test_file_target = "./CIFAR10/test_split.txt"
 
         elif dataset in ["ROD"]:
             args.class_num = 51
@@ -203,44 +203,44 @@ def make_paths(dataset = "Cifar10", source = 'Real', target='Real',args=None):
     elif node == "demetra":
         if dataset in ["caltech101", "ncaltech101"]:
             if source in ["Real", "Syn", "Sim"]: #todo da fixare
-                args.data_root_source = "/home/chiarap/event-data/CALTECH101/"
-                args.train_file_source = "/home/chiarap/event-data/CALTECH101/CALTECH101_split/train.txt"
-                args.val_file_source = "/home/chiarap/event-data/CALTECH101/CALTECH101_split/val.txt"
-                args.test_file_source = "/home/chiarap/event-data/CALTECH101/CALTECH101_split/test.txt"
+                args.data_root_source = "./CALTECH101/"
+                args.train_file_source = "./CALTECH101/CALTECH101_split/train.txt"
+                args.val_file_source = "./CALTECH101/CALTECH101_split/val.txt"
+                args.test_file_source = "./CALTECH101/CALTECH101_split/test.txt"
 
             if target in ["Real", "Syn", "Sim"]: #todo da fixare
-                args.data_root_target = "/home/chiarap/event-data/CALTECH101/"
-                args.train_file_target = "/home/chiarap/event-data/CALTECH101/CALTECH101_split/train.txt"
-                args.val_file_target = "/home/chiarap/event-data/CALTECH101/CALTECH101_split/val.txt"
-                args.test_file_target = "/home/chiarap/event-data/CALTECH101/CALTECH101_split/test.txt"
+                args.data_root_target = "./CALTECH101/"
+                args.train_file_target = "./CALTECH101/CALTECH101_split/train.txt"
+                args.val_file_target = "./CALTECH101/CALTECH101_split/val.txt"
+                args.test_file_target = "./CALTECH101/CALTECH101_split/test.txt"
 
         elif dataset in ["cifar10", "cifar10dvs"]:
             if source in ["Real", "Syn","Sim"]:
-                args.data_root_source = "/data/event-data/CIFAR10"
-                args.train_file_source = "/data/event-data/CIFAR10/train_split.txt"
-                args.val_file_source = "/data/event-data/CIFAR10/test_split.txt"
-                args.test_file_source = "/data/event-data/CIFAR10/test_split.txt"
+                args.data_root_source = "./CIFAR10"
+                args.train_file_source = "./CIFAR10/train_split.txt"
+                args.val_file_source = "./CIFAR10/test_split.txt"
+                args.test_file_source = "./CIFAR10/test_split.txt"
 
             if target in ["Real", "Syn"]:
-                args.data_root_target = "/data/event-data/CIFAR10"
-                args.train_file_target = "/data/event-data/CIFAR10/train_split.txt"
-                args.val_file_target = "/data/event-data/CIFAR10/test_split.txt"
-                args.test_file_target = "/data/event-data/CIFAR10/test_split.txt"
+                args.data_root_target = "./CIFAR10"
+                args.train_file_target = "./CIFAR10/train_split.txt"
+                args.val_file_target = "./CIFAR10/test_split.txt"
+                args.test_file_target = "./CIFAR10/test_split.txt"
 
         elif dataset in ["ROD"]:
             args.class_num = 51
             if source in ["Real", "Syn"]:
-                args.data_root_source = "/home/mirco/ROD_evrepr/"
-                args.train_file_source = "/home/mirco/SPLIT_ROD/synARID_50k-split_sync_train1.txt"
-                args.val_file_source = "/home/mirco/SPLIT_ROD/synARID_50k-split_sync_test1.txt"
-                args.test_file_source = "/home/mirco/SPLIT_ROD/synARID_50k-split_sync_test1.txt"
+                args.data_root_source = "./ROD_evrepr/"
+                args.train_file_source = "./SPLIT_ROD/synARID_50k-split_sync_train1.txt"
+                args.val_file_source = "./SPLIT_ROD/synARID_50k-split_sync_test1.txt"
+                args.test_file_source = "./SPLIT_ROD/synARID_50k-split_sync_test1.txt"
 
             if target in ["Real", "Syn"]:
-                args.data_root_target = "/home/mirco/ROD_evrepr/"
-                args.train_file_target = "/home/mirco/SPLIT_ROD/wrgbd_40k-split_sync.txt"
+                args.data_root_target = "./ROD_evrepr/"
+                args.train_file_target = "./SPLIT_ROD/wrgbd_40k-split_sync.txt"
 
             args.val_file_target = args.val_file_source #non abbiamo un val per questo setting
-            args.test_file_target = "/home/mirco/SPLIT_ROD/wrgbd_40k-split_sync.txt"
+            args.test_file_target = "./SPLIT_ROD/wrgbd_40k-split_sync.txt"
 
 
 
@@ -248,20 +248,20 @@ def make_paths(dataset = "Cifar10", source = 'Real', target='Real',args=None):
         print("Franklin")
         if dataset in ["caltech101", "ncaltech101"]:
             if source in ["Real", "Syn", "Sim"]: #todo da fixare
-                args.data_root_source = "/work/mplanamente/event-data/CALTECH101"
-                args.train_file_source = "/work/mplanamente/event-data/CALTECH101_split/train.txt"
-                args.val_file_source = "/work/mplanamente/event-data/CALTECH101_split/val.txt"
-                args.test_file_source = "/work/mplanamente/event-data/CALTECH101_split/test.txt"
+                args.data_root_source = "./CALTECH101"
+                args.train_file_source = "./CALTECH101_split/train.txt"
+                args.val_file_source = "./CALTECH101_split/val.txt"
+                args.test_file_source = "./CALTECH101_split/test.txt"
 
             if target in ["Real", "Syn", "Sim"]: #todo da fixare
-                args.data_root_target = "/work/mplanamente/event-data/CALTECH101"
-                args.train_file_target = "/work/mplanamente/event-data/CALTECH101_split/train.txt"
-                args.val_file_target = "/work/mplanamente/event-data/CALTECH101_split/val.txt"
-                args.test_file_target = "/work/mplanamente/event-data/CALTECH101_split/test.txt"
+                args.data_root_target = "./CALTECH101"
+                args.train_file_target = "./CALTECH101_split/train.txt"
+                args.val_file_target = "./CALTECH101_split/val.txt"
+                args.test_file_target = "./CALTECH101_split/test.txt"
 
         elif dataset in ["cifar10", "cifar10dvs"]:
             if source in ["Real", "Syn"]:
-                args.data_root_source = "/home/chiarap/event-data/"
+                args.data_root_source = "./"
                 args.train_file_source = ""
                 args.test_file_source = ""
 
@@ -276,19 +276,19 @@ def make_paths(dataset = "Cifar10", source = 'Real', target='Real',args=None):
 
             if source in ["Real", "Syn"]:
 
-                args.data_root_source = "/work/mplanamente/ROD_0.05"
+                args.data_root_source = "./ROD_0.05"
 
-                args.train_file_source = "/work/mplanamente/SPLIT_ROD/synARID_50k-split_sync_train1.txt"
-                args.val_file_source = "/work/mplanamente/SPLIT_ROD/synARID_50k-split_sync_test1.txt"
-                args.test_file_source = "/work/mplanamente/SPLIT_ROD/synARID_50k-split_sync_test1.txt"
+                args.train_file_source = "./SPLIT_ROD/synARID_50k-split_sync_train1.txt"
+                args.val_file_source = "./SPLIT_ROD/synARID_50k-split_sync_test1.txt"
+                args.test_file_source = "./SPLIT_ROD/synARID_50k-split_sync_test1.txt"
 
             if target in ["Real", "Syn"]:
 
-                args.data_root_target = "/work/mplanamente/ROD_0.05"
-                args.train_file_target = "/work/mplanamente/SPLIT_ROD/wrgbd_40k-split_sync.txt"
+                args.data_root_target = "./ROD_0.05"
+                args.train_file_target = "./SPLIT_ROD/wrgbd_40k-split_sync.txt"
 
             args.val_file_target = args.val_file_source  # non abbiamo un val per questo setting
-            args.test_file_target = "/work/mplanamente/SPLIT_ROD/wrgbd_40k-split_sync.txt"
+            args.test_file_target = "./SPLIT_ROD/wrgbd_40k-split_sync.txt"
 
     elif os.environ["HOME"].split("/")[-1] == "gberton": #Franklin
         print("Franklin")
@@ -322,7 +322,7 @@ def make_paths(dataset = "Cifar10", source = 'Real', target='Real',args=None):
 
             if source in ["Real", "Syn"]:
 
-                args.data_root_source = "/work/mplanamente/shared/NROD"
+                args.data_root_source = "./NROD"
 
                 args.train_file_source = "/work/mplanamente/shared/SPLIT_ROD/synARID_50k-split_sync_train1.txt"
                 args.val_file_source = "/work/mplanamente/shared/SPLIT_ROD/synARID_50k-split_sync_test1.txt"
