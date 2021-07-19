@@ -148,54 +148,52 @@ def default_param(args):
 
 
 def make_paths(dataset = "Cifar10", source = 'Real', target='Real',args=None):
-    node = platform.node()
     print("{} -> {}".format(args.source, args.target))
 
     data_root_source, data_root_target = None, None
     train_file_source, test_file_source = None, None
     train_file_target, test_file_target = None, None
 
-    if node == "tiche":
-        if dataset in ["caltech101", "ncaltech101"]:
-            if source in ["Real", "Syn", "Sim"]: #todo da fixare
-                args.data_root_source = "./CALTECH101/"
-                args.train_file_source = "./CALTECH101/CALTECH101_split/train.txt"
-                args.val_file_source = "./CALTECH101/CALTECH101_split/val.txt"
-                args.test_file_source = "./CALTECH101/CALTECH101_split/test.txt"
+    if dataset in ["caltech101", "ncaltech101"]:
+        if source in ["Real", "Syn", "Sim"]: #todo da fixare
+            args.data_root_source = "./CALTECH101/"
+            args.train_file_source = "./CALTECH101/CALTECH101_split/train.txt"
+            args.val_file_source = "./CALTECH101/CALTECH101_split/val.txt"
+            args.test_file_source = "./CALTECH101/CALTECH101_split/test.txt"
 
-            if target in ["Real", "Syn", "Sim"]: #todo da fixare
-                args.data_root_target = "./CALTECH101/"
-                args.train_file_target = "./CALTECH101/CALTECH101_split/train.txt"
-                args.val_file_target = "./CALTECH101/CALTECH101_split/val.txt"
-                args.test_file_target = "./CALTECH101/CALTECH101_split/test.txt"
+        if target in ["Real", "Syn", "Sim"]: #todo da fixare
+            args.data_root_target = "./CALTECH101/"
+            args.train_file_target = "./CALTECH101/CALTECH101_split/train.txt"
+            args.val_file_target = "./CALTECH101/CALTECH101_split/val.txt"
+            args.test_file_target = "./CALTECH101/CALTECH101_split/test.txt"
 
-        elif dataset in ["cifar10", "cifar10dvs"]:
-            if source in ["Real", "Syn","Sim"]:
-                args.data_root_source = "./CIFAR10"
-                args.train_file_source = "./CIFAR10/train_split.txt"
-                args.val_file_source = "./CIFAR10/test_split.txt"
-                args.test_file_source = "./CIFAR10/test_split.txt"
+    elif dataset in ["cifar10", "cifar10dvs"]:
+        if source in ["Real", "Syn","Sim"]:
+            args.data_root_source = "./CIFAR10"
+            args.train_file_source = "./CIFAR10/train_split.txt"
+            args.val_file_source = "./CIFAR10/test_split.txt"
+            args.test_file_source = "./CIFAR10/test_split.txt"
 
-            if target in ["Real", "Syn"]:
-                args.data_root_target = "./CIFAR10"
-                args.train_file_target = "./CIFAR10/train_split.txt"
-                args.val_file_target = "./CIFAR10/test_split.txt"
-                args.test_file_target = "./CIFAR10/test_split.txt"
+        if target in ["Real", "Syn"]:
+            args.data_root_target = "./CIFAR10"
+            args.train_file_target = "./CIFAR10/train_split.txt"
+            args.val_file_target = "./CIFAR10/test_split.txt"
+            args.test_file_target = "./CIFAR10/test_split.txt"
 
-        elif dataset in ["ROD"]:
-            args.class_num = 51
-            if source in ["Real", "Syn"]:
-                args.data_root_source = "./ROD_evrepr/"
-                args.train_file_source = "./SPLIT_ROD/synARID_50k-split_sync_train1.txt"
-                args.val_file_source = "./SPLIT_ROD/synARID_50k-split_sync_test1.txt"
-                args.test_file_source = "./SPLIT_ROD/synARID_50k-split_sync_test1.txt"
+    elif dataset in ["ROD"]:
+        args.class_num = 51
+        if source in ["Real", "Syn"]:
+            args.data_root_source = "./ROD_evrepr/"
+            args.train_file_source = "../Splits_N-ROD/synARID_50k-split_sync_train1.txt"
+            args.val_file_source = "../Splits_N-ROD/synARID_50k-split_sync_test1.txt"
+            args.test_file_source = "../Splits_N-ROD/synARID_50k-split_sync_test1.txt"
 
-            if target in ["Real", "Syn"]:
-                args.data_root_target = "./ROD_evrepr/"
-                args.train_file_target = "./SPLIT_ROD/wrgbd_40k-split_sync.txt"
+        if target in ["Real", "Syn"]:
+            args.data_root_target = "./ROD_evrepr/"
+            args.train_file_target = "../Splits_N-ROD/wrgbd_40k-split_sync.txt"
 
-            args.val_file_target = args.val_file_source #non abbiamo un val per questo setting
-            args.test_file_target = "./SPLIT_ROD/wrgbd_40k-split_sync.txt"
+        args.val_file_target = args.val_file_source #non abbiamo un val per questo setting
+        args.test_file_target = "../Splits_N-ROD/wrgbd_40k-split_sync.txt"
 
 
 
