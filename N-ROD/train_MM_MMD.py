@@ -265,7 +265,6 @@ for epoch in range(1, args.epoch + 1):
     if epoch % 5 == 0:
 
         # Recognition - source
-        # actual_test_batches = min(len(test_loader_source), args.test_batches)
         with EvaluationManager(net_list), tqdm(total=len(val_loader_target), desc="Val") as pb:
             val_target_loader_iter = iter(val_loader_target)
             correct = 0.0
@@ -274,7 +273,6 @@ for epoch in range(1, args.epoch + 1):
             val_loss_mmd_tot  = 0.0
 
             for num_batch, (img_rgb, img_event, img_label_source) in enumerate(val_target_loader_iter):
-                # By default validate only on 100 batches
 
                 # Compute source features
                 img_rgb, img_event, img_label_source = map_to_device(device, (img_rgb, img_event, img_label_source))
@@ -328,7 +326,6 @@ for epoch in range(1, args.epoch + 1):
         # Save models
 
     if epoch % 5 == 0:
-        # if epoch % 1 == 0:
         # SAVE THE MODEL
         if not os.path.exists(args.snapshot):
             os.mkdir(args.snapshot)
@@ -382,9 +379,6 @@ for epoch in range(5, args.epoch + 1, 5):
         num_predictions = 0.0
         test_loss = 0.0
         for num_batch, (img_rgb, img_event, img_label_target) in enumerate(test_target_loader_iter):
-            # By default validate only on 100 batches
-            # if num_batch >= args.test_batches:
-            #    break
 
             # Compute source features
             img_rgb, img_event, img_label_target = map_to_device(device, (img_rgb, img_event, img_label_target))

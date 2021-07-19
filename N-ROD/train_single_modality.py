@@ -314,8 +314,6 @@ for epoch in range(1, args.epoch + 1):
                 else:
                     loss_ent = 0
 
-
-
                 # Relative Rotation
                 if args.weight_rot > 0.0:
                     # Load batch: rotation, source
@@ -363,7 +361,6 @@ for epoch in range(1, args.epoch + 1):
     if epoch % 5 == 0:
 
         # Recognition - target
-        #actual_test_batches = min(len(test_loader_target), args.test_batches)
         with EvaluationManager(net_list), tqdm(total=len(val_loader_target), desc="Val") as pb:
             val_target_loader_iter = iter(val_loader_target)
             correct = 0.0
@@ -476,9 +473,7 @@ for epoch in range(1, args.epoch + 1):
 
     # Save the best model
     if epoch % 5 == 0:
-    #if epoch % 1 == 0:
     #SAVE THE MODEL
-    # todo mi sa che va fixato per dataParallel
         if not os.path.exists(args.snapshot):
             os.mkdir(args.snapshot)
         if eventHead.module.trainable:
@@ -531,9 +526,6 @@ for epoch in range(5, args.epoch + 1, 5):
         num_predictions = 0.0
         test_loss = 0.0
         for num_batch, (img, img_label_target) in enumerate(test_target_loader_iter):
-            # By default validate only on 100 batches
-            # if num_batch >= args.test_batches:
-            #    break
 
             # Compute source features
             img, img_label_target = map_to_device(device, (img, img_label_target))

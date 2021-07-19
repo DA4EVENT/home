@@ -149,9 +149,7 @@ eventHead = EvReprHead(args)
 
 netG_rgb = ResBase(architecture=args.net, device = device)
 netG_event = ResBase(architecture=args.net, channels_event=args.channels_event, AvgChannels=args.AvgChannels, device = device)
-
 netF = ResClassifier(input_dim=input_dim_F * 2, class_num=args.class_num, dropout_p=args.dropout_p, extract=True)
-
 netF.apply(weights_init)
 
 net_list = [netG_rgb, netG_event, netF, eventHead]
@@ -281,10 +279,6 @@ for epoch in range(1, args.epoch + 1):
             num_predictions = 0.0
             val_loss = 0.0
             for num_batch, (img_rgb, img_event, img_label_source) in enumerate(val_target_loader_iter):
-                # By default validate only on 100 batches
-                #if num_batch >= args.test_batches:
-                #    break
-
                 # Compute source features
                 img_rgb, img_event, img_label_source = map_to_device(device, (img_rgb, img_event, img_label_source))
                 img_event = eventHead(img_event, transform=th_test_transform)

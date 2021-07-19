@@ -82,11 +82,7 @@ th_test_transform = get_torch_transforms(test_transform, args)
     Prepare datasets
 """
 
-
-if args.dataset in ["caltech101","ncaltech101","cifar10"]:
-    from data_loader import Caltech101 as loaders
-else:
-    from data_loader import ROD as loaders
+from data_loader import ROD as loaders
 
 # If evrepr="voxelgrid" we expect the modality to be "voxelgrid_#chans"
 # assert args.evrepr is None or args.evrepr in args.modality
@@ -97,7 +93,7 @@ train_set_source = loaders(args.data_root_source, path_txt=args.train_file_sourc
 # Target: training set (for entropy)
 train_set_target = loaders(args.data_root_target, path_txt=args.train_file_target, isSource=False, train=True,
                            do_rot=False, transform=train_transform, args=args)
-# Target: val set (per rod ci sara' il test del source)
+# Target: val set
 val_set_target = loaders(args.data_root_source, path_txt=args.val_file_target, isSource=True, train=False, do_rot=False,
                          transform=test_transform, args=args)
 # Target: test set
@@ -216,8 +212,6 @@ for epoch in range(1, args.epoch + 1):
     print("Epoch {} / {}".format(epoch, args.epoch))
     # ========================= TRAINING =========================
 
-
-
     # Train source (recognition)
     train_loader_source_rec_iter = train_loader_source
     # Train target (entropy)
@@ -231,8 +225,6 @@ for epoch in range(1, args.epoch + 1):
 
     with tqdm(total=len(train_loader_source), desc="Train") as pb:
         for batch_num, (img, img_label_source) in enumerate(train_loader_source_rec_iter):
-            #if img.size(0) != args.batch_size:
-            #   break
 
             # The optimization step is performed by OptimizerManager
             with OptimizerManager(optims_list, batch_num, args.num_accumulation):
@@ -257,7 +249,6 @@ for epoch in range(1, args.epoch + 1):
 
                 #Compute Classification and MMD losses
                 logits, mmd_loss = netF(features_source, features_target)
-                #del features_source, features_target
                 loss_rec = ce_loss(logits, img_label_source)
                 loss = (loss_rec + mmd_loss.mean() * args.weight_mmd) * SCALE_Accumulation
                 loss.backward()
@@ -268,7 +259,6 @@ for epoch in range(1, args.epoch + 1):
     if epoch % 5 == 0:
 
         # Recognition - target
-        #actual_test_batches = min(len(test_loader_target), args.test_batches)
         with EvaluationManager(net_list), tqdm(total=len(val_loader_target), desc="Val") as pb:
             val_source_loader_iter = iter(val_loader_target) ## ricordare che è SOURCE TEST
             correct = 0.0
@@ -276,9 +266,6 @@ for epoch in range(1, args.epoch + 1):
             val_loss = 0.0
             val_loss_mmd_tot  = 0.0
             for num_batch, (img, img_label_source) in enumerate(val_source_loader_iter):
-                # By default validate only on 100 batches
-                #if num_batch >= args.test_batches:
-                #    break
 
                 # Compute features source test
                 img, img_label_source = map_to_device(device, (img, img_label_source))
@@ -330,7 +317,6 @@ for epoch in range(1, args.epoch + 1):
 
     # Save the best model
     if epoch % 5 == 0:
-        # if epoch % 1 == 0:
         # SAVE THE MODEL
         if not os.path.exists(args.snapshot):
             os.mkdir(args.snapshot)
@@ -371,9 +357,6 @@ for epoch in range(5, args.epoch + 1, 5):
         num_predictions = 0.0
         test_loss = 0.0
         for num_batch, (img, img_label_target) in enumerate(test_target_loader_iter):
-            # By default validate only on 100 batches
-            # if num_batch >= args.test_batches:
-            #    break
 
             # Compute source features
             img, img_label_target = map_to_device(device, (img, img_label_target))

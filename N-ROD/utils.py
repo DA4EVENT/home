@@ -147,12 +147,8 @@ def default_param(args):
         args.multimodal = False
 
 
-def make_paths(dataset = "Cifar10", source = 'Real', target='Real',args=None):
+def make_paths(dataset = "ROD", source = 'Real', target='Real',args=None):
     print("{} -> {}".format(args.source, args.target))
-
-    data_root_source, data_root_target = None, None
-    train_file_source, test_file_source = None, None
-    train_file_target, test_file_target = None, None
 
     if dataset in ["ROD"]:
         args.class_num = 51
@@ -166,7 +162,7 @@ def make_paths(dataset = "Cifar10", source = 'Real', target='Real',args=None):
             args.data_root_target = "./ROD_evrepr/"
             args.train_file_target = "../Splits_N-ROD/wrgbd_40k-split_sync.txt"
 
-        args.val_file_target = args.val_file_source #non abbiamo un val per questo setting
+        args.val_file_target = args.val_file_source
         args.test_file_target = "../Splits_N-ROD/wrgbd_40k-split_sync.txt"
 
 

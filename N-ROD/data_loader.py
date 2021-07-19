@@ -181,11 +181,6 @@ class ROD(Dataset):
 
         else:
             path_img, target = self.images[index]
-            #"image_0020.npy"
-            #if self.train :
-            #    path_img = path_img[:-14] + path_img[-14:-4] + "/" + path_img[-14:-10]+"es.npy"
-            #print(path_img)
-
             img = self.reader(path_img)
 
             self.transforms.randomize_parameters()

@@ -317,8 +317,6 @@ for epoch in range(1, args.epoch + 1):
                 else:
                     loss_ent = 0
 
-
-
                 # Relative Rotation
                 if args.weight_rot > 0.0:
                     # Load batch: rotation, source
@@ -409,8 +407,7 @@ for epoch in range(1, args.epoch + 1):
                 correct = 0.0
                 num_predictions = 0.0
                 for num_val_batch, (img_rgb, img_event, _, rot_label , _ , _ ) in enumerate(rot_val_source_loader_iter):
-                    #if num_val_batch > args.test_batches:
-                    #    break
+
                     img_rgb, img_event, rot_label = map_to_device(device, (img_rgb, img_event, rot_label))
                     img_event = eventHead(img_event, transform=th_train_transform_with_Rot,
                                     rot=rot_label)
@@ -470,10 +467,8 @@ for epoch in range(1, args.epoch + 1):
 
     if epoch % 5 == 0:
         # SAVE THE MODEL
-        # todo mi sa che va fixato per dataParallel
         if not os.path.exists(args.snapshot):
             os.mkdir(args.snapshot)
-        # import pdb; pdb.set_trace()
         if eventHead.module.trainable:
             torch.save(eventHead.state_dict(), os.path.join(
                 args.snapshot,

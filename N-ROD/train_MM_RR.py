@@ -92,8 +92,6 @@ from data_loader import ROD as loaders
 train_set_source = loaders(args.data_root_source, path_txt=args.train_file_source, isSource=True, train=True, do_rot=False,
                                                transform=train_transform, args=args)
 
-
-
 # Target: training set (for entropy)
 train_set_target = loaders(args.data_root_target, path_txt=args.train_file_target, isSource=False, train=True,
                                               do_rot=False, transform=train_transform, args=args)
@@ -199,7 +197,6 @@ netG_event = ResBase(architecture=args.net, channels_event=args.channels_event, 
 
 netF = ResClassifier(input_dim=input_dim_F * 2, class_num=args.class_num, dropout_p=args.dropout_p, extract=False)
 netF_rot = RelativeRotationClassifier(input_dim=input_dim_F * 2, class_num=4)
-#netF_rot = ResClassifier(input_dim=input_dim_F * 2, class_num=4, dropout_p=args.dropout_p, extract=False)
 
 netF_rot.apply(weights_init)
 netF.apply(weights_init)
@@ -370,16 +367,12 @@ for epoch in range(1, args.epoch + 1):
     # ========================= VALIDATION =========================
     if epoch % 5 == 0:
         # Recognition - source
-        #actual_test_batches = min(len(test_loader_source), args.test_batches)
         with EvaluationManager(net_list), tqdm(total=len(val_loader_target), desc="Val") as pb:
             val_target_loader_iter = iter(val_loader_target)
             correct = 0.0
             num_predictions = 0.0
             val_loss = 0.0
             for num_batch, (img_rgb, img_event, img_label_source) in enumerate(val_target_loader_iter):
-                # By default validate only on 100 batches
-                #if num_batch >= args.test_batches:
-                #    break
 
                 # Compute source features
                 img_rgb, img_event, img_label_source = map_to_device(device, (img_rgb, img_event, img_label_source))
@@ -419,8 +412,7 @@ for epoch in range(1, args.epoch + 1):
                 correct = 0.0
                 num_predictions = 0.0
                 for num_val_batch, (img_rgb, img_event, _, rot_label, _,_) in enumerate(rot_val_source_loader_iter):
-                    #if num_val_batch > args.test_batches:
-                    #    break
+
                     img_rgb, img_event, rot_label = map_to_device(device, (img_rgb, img_event, rot_label))
                     img_event = eventHead(img_event, transform=th_train_transform_with_Rot,
                                     rot=rot_label)
@@ -443,15 +435,12 @@ for epoch in range(1, args.epoch + 1):
                 print("Epoch: {} - Validation source rotation accuracy: {}".format(epoch, rot_val_acc))
 
             # Rotation - target
-            #actual_test_batches = min(len(rot_test_target_loader), args.test_batches)
             with EvaluationManager(net_list), tqdm(total=len(rot_val_target_loader), desc="Val Rot T") as pb:
                 rot_val_target_loader_iter = iter(rot_val_target_loader)
                 correct = 0.0
                 val_loss_rot = 0.0
                 num_predictions = 0.0
                 for num_val_batch, (img_rgb, img_event, _, rot_label, _,_) in enumerate(rot_val_target_loader_iter):
-                    #if num_val_batch > args.test_batches:
-                    #    break
 
                     img_rgb, img_event, rot_label = map_to_device(device, (img_rgb, img_event, rot_label))
                     img_event = eventHead(img_event, transform=th_train_transform_with_Rot,
@@ -482,7 +471,6 @@ for epoch in range(1, args.epoch + 1):
     # Save models
 
     if epoch % 5 == 0:
-        # if epoch % 1 == 0:
         # SAVE THE MODEL
         if not os.path.exists(args.snapshot):
             os.mkdir(args.snapshot)
@@ -539,9 +527,7 @@ for epoch in range(5, args.epoch + 1, 5):
         num_predictions = 0.0
         test_loss = 0.0
         for num_batch, (img_rgb, img_event, img_label_target) in enumerate(test_target_loader_iter):
-            # By default validate only on 100 batches
-            # if num_batch >= args.test_batches:
-            #    break
+
 
             # Compute source features
             img_rgb, img_event, img_label_target = map_to_device(device, (img_rgb, img_event, img_label_target))

@@ -262,8 +262,7 @@ for epoch in range(1, args.epoch + 1):
 
     with tqdm(total=len(train_loader_source), desc="Train") as pb:
         for batch_num, (img_rgb, img_event, img_label_source) in enumerate(train_loader_source_rec_iter):
-            if img_rgb.size(0) != args.batch_size :
-                break
+
 
             # The optimization step is performed by OptimizerManager
             with OptimizerManager(optims_list, batch_num, args.num_accumulation):
@@ -459,7 +458,6 @@ for epoch in range(1, args.epoch + 1):
             writer.add_scalar("Accuracy/disc_val", val_acc_disc, epoch)
 
     # Save models
-
     if epoch % 5 == 0:
         # SAVE THE MODEL
         if not os.path.exists(args.snapshot):
