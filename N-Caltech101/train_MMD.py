@@ -68,19 +68,9 @@ print("DEVICE", device)
 
 from spatialTransforms import (Compose, ToTensor, CenterCrop, Normalize,
                                RandomHorizontalFlip, RandomCrop, Rotation, Scale_ReplicateBorder)
-normalize = Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 
-#train_transform = MyTransformer([int((256 - 224) / 2), int((256 - 224) / 2)], False)
-if args.dataset == "ncaltech101":
-    print("Normalize with 0 and 1" )
-    normalize = Normalize(mean=[0.] * args.channels_event,
-                          std=[1.] * args.channels_event)
-
-#train_transform = Compose([Scale(256), RandomHorizontalFlip(), RandomCrop(224),ToTensor(), normalize])
 train_transform = Compose([Scale_ReplicateBorder(256), RandomHorizontalFlip(), RandomCrop(224), ToTensor()])
 train_transform_with_Rot = Compose([Scale_ReplicateBorder(256), RandomHorizontalFlip(), RandomCrop(224), Rotation(), ToTensor()])
-
-#test_transform = Compose([Scale(256),CenterCrop(224),ToTensor(),normalize])
 test_transform = Compose([Scale_ReplicateBorder(256),CenterCrop(224),ToTensor()])
 
 th_train_transform = get_torch_transforms(train_transform)
@@ -94,8 +84,7 @@ th_test_transform = get_torch_transforms(test_transform)
 
 if args.dataset in ["caltech101","ncaltech101"]:
     from data_loader import Caltech101 as loaders
-elif args.dataset == "Cifar10":
-    from data_loader import CIFAR10 as loaders
+
 
 # If evrepr="voxelgrid" we expect the modality to be "voxelgrid_#chans"
 # assert args.evrepr is None or args.evrepr in args.modality
@@ -106,9 +95,6 @@ train_set_source = loaders(args.data_root_source, path_txt=args.train_file_sourc
 # Target: training set (for entropy)
 train_set_target = loaders(args.data_root_target, path_txt=args.train_file_target, isSource=False, train=True,
                            do_rot=False, transform=train_transform, args=args)
-# Target: val set
-val_set_target = loaders(args.data_root_source, path_txt=args.val_file_target, isSource=False, train=False, do_rot=False,
-                         transform=test_transform, args=args)
 # Target: test set
 test_set_target = loaders(args.data_root_source, path_txt=args.test_file_target, isSource=False, train=False, do_rot=False,
                           transform=test_transform, args=args)
@@ -130,7 +116,6 @@ rot_set_target = loaders(args.data_root_target, path_txt=args.val_file_target,  
 """
     Prepare data loaders   
 """
-#args.batch_size = 16 # da togliere by Mirco
 # Source training recognition
 train_loader_source = DataLoader(train_set_source,
                                  shuffle=True,
@@ -144,15 +129,6 @@ if args.weight_mmd > 0:
                                      batch_size=args.batch_size,
                                      num_workers=args.num_workers,
                                      collate_fn=collate_pad_events,drop_last=True)
-
-
-# Target Val recognition
-val_loader_target = DataLoader(val_set_target,
-                               shuffle=False,
-                               batch_size=args.batch_size,
-                               num_workers=args.num_workers,
-                               collate_fn=collate_pad_events)
-
 
 
 # Target test recognition
@@ -230,7 +206,6 @@ Best_Epoch = 0
 if args.num_accumulation != 1:
     print("Accumulation n  --> ", args.num_accumulation)
 
-print("Ho Forzato il BS ad essere 16, perche per MMD dobbimo concatenare le feat e probabilmento 32 non ci stanno")
 
 # Zero Grad
 for op in optims_list:
@@ -247,8 +222,6 @@ for epoch in range(1, args.epoch + 1):
     # Train target (entropy)
     if args.weight_mmd > 0:
         train_target_loader_iter = IteratorWrapper(train_loader_target)
-    # Val target
-    val_target_loader_iter = IteratorWrapper(val_loader_target)
 
 
     with tqdm(total=len(train_loader_source), desc="Train") as pb:
@@ -286,73 +259,6 @@ for epoch in range(1, args.epoch + 1):
 
                 pb.update(1)
 
-    # ========================= VALIDATION =========================
-
-    # Recognition - target
-    #actual_test_batches = min(len(test_loader_target), args.test_batches)
-    with EvaluationManager(net_list), tqdm(total=len(val_loader_target), desc="Val") as pb:
-        val_target_loader_iter = iter(val_loader_target)
-        correct = 0.0
-        num_predictions = 0.0
-        val_loss = 0.0
-        for num_batch, (img, img_label_target) in enumerate(val_target_loader_iter):
-            # By default validate only on 100 batches
-            #if num_batch >= args.test_batches:
-            #    break
-
-            # Compute features
-            img, img_label_target = map_to_device(device, (img, img_label_target))
-            img = eventHead(img, transform=th_test_transform)
-            feat, _ = netG(img)
-            features_target = feat
-
-            # Compute predictions
-            preds = netF(features_target)
-
-            val_loss += ce_loss(preds, img_label_target).item()
-            correct += (torch.argmax(preds, dim=1) == img_label_target).sum().item()
-            num_predictions += preds.shape[0]
-
-            pb.update(1)
-
-        val_acc = correct / num_predictions
-        val_loss = val_loss / num_predictions
-
-
-        print("Epoch: {} - Validation target accuracy (recognition): {}".format(epoch, val_acc))
-
-    del img, img_label_target, feat, preds
-
-    writer.add_scalar("Loss/train", loss_rec.item(), epoch)
-    writer.add_scalar("Loss/val", val_loss, epoch)
-    writer.add_scalar("Accuracy/val", val_acc, epoch)
-    with open(os.path.join(os.path.join(args.experiment, hp_string), 'val_precision.txt'), 'a+') as f:
-        f.write("[%d/%d]\tAccVal: %.4f%%\n" %
-                (epoch,args.epoch,val_acc))
-
-
-
-    # Save the best model
-    if (Best_Acc_Val < val_acc) and args.SaveModel:
-        Best_Acc_Val = val_acc
-        Best_Epoch = epoch
-        if epoch % 1 == 0:
-            if not os.path.exists(args.snapshot):
-                os.mkdir(args.snapshot)
-
-            if eventHead.trainable:
-                torch.save(eventHead.state_dict(), os.path.join(
-                    args.snapshot,
-                    hp_string + "_eventHead_" + "_epoch" + str(epoch) + ".pth"))
-
-            torch.save(netG.state_dict(),
-                       os.path.join(args.snapshot, hp_string + "_netG_" + "_epoch" + str(epoch) + ".pth"))
-
-            torch.save(netF.state_dict(), os.path.join(args.snapshot, hp_string + "_netF_"  + "_epoch" + str(epoch) + ".pth"))
-
-print("The Best Acc: ", Best_Acc_Val)
-print("Epoch: ", Best_Epoch)
-
 
 print("Starting Test on target...")
 # Val target
@@ -386,5 +292,5 @@ with EvaluationManager(net_list), tqdm(total=len(test_loader_target), desc="Test
     test_loss = test_loss / num_predictions
     print("Test Target accuracy (recognition): {}".format(test_acc))
     with open(os.path.join(os.path.join(args.experiment, hp_string), 'val_precision.txt'), 'a+') as f:
-        f.write("[%d/%d]\tAcc_Test: %.4f%%\n" %
-                (epoch,args.epoch,test_acc))
+        f.write("Acc_Test: %.4f%%\n" %
+                (test_acc))

@@ -15,7 +15,7 @@ class ResBase(nn.Module):
             model_resnet = models.resnet50(pretrained=True)
             self.out_channel = 2048
         elif architecture == 'resnet34':
-            model_resnet = models.resnet34(pretrained=True) #todo adapt to take in input K channels for the event data
+            model_resnet = models.resnet34(pretrained=True)
             self.out_channel = 512
         elif architecture == 'resnet18':
             model_resnet = models.resnet18(pretrained=True)
