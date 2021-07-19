@@ -157,15 +157,15 @@ def make_paths(dataset = "Cifar10", source = 'Real', target='Real',args=None):
     if dataset in ["caltech101", "ncaltech101"]:
         if source in ["Real", "Syn", "Sim"]: #todo da fixare
             args.data_root_source = "./CALTECH101/"
-            args.train_file_source = "./CALTECH101/CALTECH101_split/train.txt"
-            args.val_file_source = "./CALTECH101/CALTECH101_split/val.txt"
-            args.test_file_source = "./CALTECH101/CALTECH101_split/test.txt"
+            args.train_file_source = "../Splits_N-Caltech101/train.txt"
+            args.val_file_source = "../Splits_N-Caltech101/val.txt"
+            args.test_file_source = "../Splits_N-Caltech101/test.txt"
 
         if target in ["Real", "Syn", "Sim"]: #todo da fixare
             args.data_root_target = "./CALTECH101/"
-            args.train_file_target = "./CALTECH101/CALTECH101_split/train.txt"
-            args.val_file_target = "./CALTECH101/CALTECH101_split/val.txt"
-            args.test_file_target = "./CALTECH101/CALTECH101_split/test.txt"
+            args.train_file_target = "../Splits_N-Caltech101/train.txt"
+            args.val_file_target = "../Splits_N-Caltech101/val.txt"
+            args.test_file_target = "../Splits_N-Caltech101/test.txt"
 
     elif dataset in ["cifar10", "cifar10dvs"]:
         if source in ["Real", "Syn","Sim"]:
