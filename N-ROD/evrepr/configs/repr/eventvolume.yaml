@@ -1,0 +1,9 @@
+viz:
+  group_channels: 1
+
+repr:
+  name: "EventVolumeRepresentation"
+  args:
+    frame_size: ${data.frame_size}
+    bins: 9
+    

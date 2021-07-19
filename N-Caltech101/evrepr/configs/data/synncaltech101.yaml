@@ -1,0 +1,5 @@
+data:
+  path: ${env:EVREPR_DATASETS}/ncaltech_syn_images
+  frame_size: [180, 240]
+  reader:
+    name: RPGNpzReader

@@ -1,0 +1,27 @@
+action: ???
+device: cuda:0
+crop_repr: True
+output_path: null
+
+viz:
+  display_wait: 0
+  group_channels: null
+  clip_outliers: True
+
+data:
+  config: null
+  frame_size: ???
+  path: ???
+  to_torch: False
+  reader:
+    name: ???
+    args: {}
+  loader:
+    args:
+      batch_size: 2
+
+repr:
+  config: null
+  name: ???
+  args:
+    input_is_torch: ${data.to_torch}

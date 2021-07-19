@@ -1,0 +1,10 @@
+viz:
+  group_channels: 2
+
+repr:
+  name: "CountsLastTsRepresentation"
+  args:
+    frame_size: ${data.frame_size}
+    bins: 1
+    features: ['counts']
+    

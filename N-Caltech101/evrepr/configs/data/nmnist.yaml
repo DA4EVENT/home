@@ -1,0 +1,5 @@
+data:
+  path: ${env:EVREPR_DATASETS}/nmnist
+  frame_size: [34, 34]
+  reader:
+    name: BinFileReader

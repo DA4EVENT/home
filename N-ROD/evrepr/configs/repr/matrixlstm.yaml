@@ -1,0 +1,23 @@
+viz:
+  group_channels: 3
+
+repr:
+  name: "MatrixLSTMRepresentation"
+  args:
+    frame_size: ${data.frame_size}
+    region_shape: [1, 1]
+    region_stride: [1, 1]
+    input_size: 1
+    hidden_size: 3
+    num_layers: 1
+    bias: True
+    lstm_type: "LSTM"
+    add_coords_features: false
+    add_feature_mode: "delay_norm"
+    normalize_relative: True
+    max_events_per_rf: 128
+    maintain_in_shape: True
+    keep_most_recent: True
+    frame_intervals: 1
+    frame_intervals_mode: null
+    add_selayer: False

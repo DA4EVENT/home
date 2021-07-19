@@ -1,0 +1,12 @@
+viz:
+  group_channels: 2
+
+repr:
+  name: "HATSRepresentation"
+  args:
+    frame_size: ${data.frame_size}
+    bins: 1
+    r: 3
+    k: 10
+    tau: 1e6
+    delta_t: 100e3

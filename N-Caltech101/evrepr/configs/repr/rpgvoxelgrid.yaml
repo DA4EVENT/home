@@ -1,0 +1,8 @@
+viz:
+  group_channels: 1
+
+repr:
+  name: "RPGVoxelGridRepresentation"
+  args:
+    frame_size: ${data.frame_size}
+    bins: 9

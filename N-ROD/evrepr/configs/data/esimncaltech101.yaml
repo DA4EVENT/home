@@ -1,0 +1,12 @@
+data:
+  path: ${env:EVREPR_DATASETS}/ncaltech_syn_images
+  frame_size: [180, 240]
+  reader:
+    name: ESIMFileReader
+    args:
+      contrast_threshold_pos: 0.15
+      contrast_threshold_neg: 0.15
+      refractory_period: 1e6
+      log_eps: 0.001
+      use_log: False
+

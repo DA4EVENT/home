@@ -1,0 +1,10 @@
+data:
+  path: ${env:EVREPR_DATASETS}/cifar10dvs
+  frame_size: [128, 128]
+  reader:
+    name: AedatFileReader
+  transforms:
+      - name: ClockwiseRotation
+        args:
+          deg: -90
+      - name: HorizontalFlip

@@ -1,0 +1,16 @@
+viz:
+  group_channels: 3
+
+repr:
+  name: "E2VidRepresentation"
+  args:
+    weights: "http://rpg.ifi.uzh.ch/data/E2VID/models/E2VID_lightweight.pth.tar"
+    frame_size: ${data.frame_size}
+    arch: "e2vidrecurrent"
+    bins: 5
+    skip_type: "sum"
+    num_encoders: 4
+    base_num_channels: 32
+    num_residual_blocks: 2
+    norm: null
+    use_upsample_conv: True

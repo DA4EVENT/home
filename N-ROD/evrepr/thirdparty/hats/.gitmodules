@@ -1,0 +1,3 @@
+[submodule "demo/psee"]
+	path = demo/psee
+	url = https://github.com/prophesee-ai/prophesee-automotive-dataset-toolbox.git

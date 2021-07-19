@@ -1,0 +1,5 @@
+data:
+  path: ${env:EVREPR_DATASETS}/ncaltech101
+  frame_size: [180, 240]
+  reader:
+    name: BinFileReader

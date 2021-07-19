@@ -1,0 +1,12 @@
+viz:
+  group_channels: 2
+
+repr:
+  name: "ESTRepresentation"
+  args:
+    bins: 9
+    frame_size: ${data.frame_size}
+    mlp_layers: [1, 30,  30, 1]
+    activation: "LeakyReLU"
+    activation_args:
+      negative_slope: 0.1
