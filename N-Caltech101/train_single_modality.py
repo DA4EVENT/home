@@ -69,7 +69,7 @@ print("DEVICE", device)
 
 from spatialTransforms import (Compose, ToTensor, CenterCrop, Normalize,
                                RandomHorizontalFlip, RandomCrop, Rotation, Scale_ReplicateBorder)
-normalize = Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+normalize = Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]) #todo remove
 
 #train_transform = MyTransformer([int((256 - 224) / 2), int((256 - 224) / 2)], False)
 if args.dataset == "ncaltech101":
@@ -77,11 +77,8 @@ if args.dataset == "ncaltech101":
     normalize = Normalize(mean=[0.] * args.channels_event,
                           std=[1.] * args.channels_event)
 
-#train_transform = Compose([Scale(256), RandomHorizontalFlip(), RandomCrop(224),ToTensor(), normalize])
 train_transform = Compose([Scale_ReplicateBorder(256), RandomHorizontalFlip(), RandomCrop(224), ToTensor()])
 train_transform_with_Rot = Compose([Scale_ReplicateBorder(256), RandomHorizontalFlip(), RandomCrop(224), Rotation(), ToTensor()])
-
-#test_transform = Compose([Scale(256),CenterCrop(224),ToTensor(),normalize])
 test_transform = Compose([Scale_ReplicateBorder(256),CenterCrop(224),ToTensor()])
 
 th_train_transform = get_torch_transforms(train_transform)
@@ -93,10 +90,9 @@ th_test_transform = get_torch_transforms(test_transform)
 """
 
 
-if args.dataset in ["caltech101","ncaltech101","Cifar10"]:
+if args.dataset in ["caltech101","ncaltech101"]:
     from data_loader import Caltech101 as loaders
-#elif args.dataset == "Cifar10":
-#    from data_loader import CIFAR10 as loaders
+
 
 # If evrepr="voxelgrid" we expect the modality to be "voxelgrid_#chans"
 # assert args.evrepr is None or args.evrepr in args.modality
@@ -107,11 +103,9 @@ train_set_source = loaders(args.data_root_source, path_txt=args.train_file_sourc
 # Target: training set (for entropy)
 train_set_target = loaders(args.data_root_target, path_txt=args.train_file_target, isSource=False, train=True,
                            do_rot=False, transform=train_transform, args=args)
-# Target: val set
-val_set_target = loaders(args.data_root_source, path_txt=args.val_file_target, isSource=False, train=False, do_rot=False,
-                         transform=test_transform, args=args)
+
 # Target: test set
-test_set_target = loaders(args.data_root_source, path_txt=args.test_file_target, isSource=False, train=False, do_rot=False,
+test_set_target = loaders(args.data_root_target, path_txt=args.test_file_target, isSource=False, train=False, do_rot=False,
                           transform=test_transform, args=args)
 
 
@@ -147,14 +141,6 @@ if args.weight_ent > 0:
                                      collate_fn=collate_pad_events,drop_last=True)
 
 
-# Target Val recognition
-val_loader_target = DataLoader(val_set_target,
-                               shuffle=False,
-                               batch_size=11,
-                               num_workers=args.num_workers,
-                               collate_fn=collate_pad_events, drop_last=True)
-
-
 
 # Target test recognition
 test_loader_target = DataLoader(test_set_target,
@@ -172,11 +158,7 @@ if args.weight_rot > 0:
                                    num_workers=args.num_workers,
                                    collate_fn=collate_pad_events,drop_last=True)
 
-    rot_val_source_loader = DataLoader(rot_test_set_source,
-                                        shuffle=True,
-                                        batch_size=11,
-                                        num_workers=args.num_workers,
-                                        collate_fn=collate_pad_events,drop_last=True)
+
 
     # Target rot
 
@@ -186,11 +168,7 @@ if args.weight_rot > 0:
                                    num_workers=args.num_workers,
                                    collate_fn=collate_pad_events,drop_last=True)
 
-    rot_val_target_loader = DataLoader(rot_set_target,
-                                        shuffle=True,
-                                        batch_size=11,
-                                        num_workers=args.num_workers,
-                                        collate_fn=collate_pad_events,drop_last=True)
+
 
 """
     Set up network & optimizer
@@ -200,7 +178,6 @@ input_dim_F = 2048 if args.net == 'resnet50' else 512
 eventHead = EvReprHead(args)
 netG = ResBase(architecture=args.net, channels_event=args.channels_event, AvgChannels=args.AvgChannels, device = device)
 netF = ResClassifier(input_dim=input_dim_F, class_num=args.class_num, dropout_p=args.dropout_p, extract=False)
-#netF_rot = RelativeRotationClassifier(input_dim=input_dim_F, class_num=4)
 netF_rot = ResClassifier(input_dim=input_dim_F, class_num=4, dropout_p=args.dropout_p, extract=False)
 netF_rot.apply(weights_init)
 netF.apply(weights_init)
@@ -283,8 +260,7 @@ for epoch in range(1, args.epoch + 1):
     # Train target (entropy)
     if args.weight_ent > 0:
         train_target_loader_iter = IteratorWrapper(train_loader_target)
-    # Val target
-    val_target_loader_iter = IteratorWrapper(val_loader_target)
+
 
     # (rotation)
     if args.weight_rot > 0:
@@ -377,149 +353,10 @@ for epoch in range(1, args.epoch + 1):
 
                 pb.update(1)
 
-    # ========================= VALIDATION =========================
 
-    # Recognition - target
-    #actual_test_batches = min(len(test_loader_target), args.test_batches)
-    with EvaluationManager(net_list), tqdm(total=len(val_loader_target), desc="Val") as pb:
-        val_target_loader_iter = iter(val_loader_target)
-        correct = 0.0
-        num_predictions = 0.0
-        val_loss = 0.0
-        for num_batch, (img, img_label_target) in enumerate(val_target_loader_iter):
-            # By default validate only on 100 batches
-            #if num_batch >= args.test_batches:
-            #    break
-
-            # Compute source features
-            img, img_label_target = map_to_device(device, (img, img_label_target))
-            img = eventHead(img, transform=th_test_transform)
-            feat, _ = netG(img)
-            features_target = feat
-
-            # Compute predictions
-            preds = netF(features_target)
-
-            val_loss += ce_loss(preds, img_label_target).item()
-            correct += (torch.argmax(preds, dim=1) == img_label_target).sum().item()
-            num_predictions += preds.shape[0]
-
-            pb.update(1)
-
-        val_acc = correct / num_predictions
-        val_loss = val_loss / num_predictions
-
-
-        print("Epoch: {} - Validation target accuracy (recognition): {}".format(epoch, val_acc))
-
-    del img, img_label_target, feat, preds
-
-    writer.add_scalar("Loss/train", loss_rec.item(), epoch)
-    writer.add_scalar("Loss/val", val_loss, epoch)
-    writer.add_scalar("Accuracy/val", val_acc, epoch)
-    with open(os.path.join(os.path.join(args.experiment, hp_string), 'val_precision.txt'), 'a+') as f:
-        f.write("[%d/%d]\tAccVal: %.4f%%\n" %
-                (epoch,args.epoch,val_acc))
-
-
-    # Relative Rotation
-    if args.weight_rot > 0.0:
-
-        # Rotation - source
-        cf_matrix = np.zeros([4, 4])
-        #actual_test_batches = min(len(rot_val_source_loader), args.test_batches)
-        with EvaluationManager(net_list), tqdm(total=len(rot_val_source_loader), desc="Val Rot S") as pb:
-            rot_val_source_loader_iter = iter(rot_val_source_loader)
-            correct = 0.0
-            num_predictions = 0.0
-            for num_val_batch, (img, _, rot_label) in enumerate(rot_val_source_loader_iter):
-                #if num_val_batch > args.test_batches:
-                #    break
-                img, rot_label = map_to_device(device, (img, rot_label))
-
-                # Compute features (with pooling)
-                # TODO(marco): is it ok that we have just one set of
-                #   transforms for the rotation task?
-                img = eventHead(img, transform=th_train_transform_with_Rot,
-                                rot=rot_label)
-                feat, _ = netG(img)
-                # Compute predictions
-                preds = netF_rot(feat)
-
-                val_loss_rot = ce_loss(preds, rot_label).item()
-                correct += (torch.argmax(preds, dim=1) == rot_label).sum().item()
-                num_predictions += preds.shape[0]
-
-                pb.update(1)
-
-            del img, rot_label, preds, feat
-
-            rot_val_acc = correct / num_predictions
-            print("Epoch: {} - Validation source rotation accuracy: {}".format(epoch, rot_val_acc))
-
-        # Rotation - target
-        #actual_test_batches = min(len(rot_val_target_loader), args.test_batches)
-        with EvaluationManager(net_list), tqdm(total=len(rot_val_target_loader), desc="Val Rot T") as pb:
-            rot_val_target_loader_iter = iter(rot_val_target_loader)
-            correct = 0.0
-            val_loss_rot = 0.0
-            num_predictions = 0.0
-            for num_val_batch, (img, _, rot_label) in enumerate(rot_val_target_loader_iter):
-                #if num_val_batch > args.test_batches:
-                #    break
-
-                img, rot_label = map_to_device(device, (img, rot_label))
-
-                # Compute features (with pooling)
-                img = eventHead(img, transform=th_train_transform_with_Rot,
-                                rot=rot_label)
-                feat, _ = netG(img)
-                # Compute predictions
-                preds = netF_rot(feat)
-
-                val_loss_rot += ce_loss(preds, rot_label).item()
-                correct += (torch.argmax(preds, dim=1) == rot_label).sum().item()
-                num_predictions += preds.shape[0]
-
-                pb.update(1)
-
-            rot_val_acc = correct / num_predictions
-            val_loss_rot = val_loss_rot / num_predictions
-            print("Epoch: {} - Validation target rotation accuracy: {}".format(epoch, rot_val_acc))
-
-        del img, rot_label, preds
-
-        writer.add_scalar("Loss/rot", loss_rot, epoch)
-        writer.add_scalar("Loss/rot_val", val_loss_rot, epoch)
-        writer.add_scalar("Accuracy/rot_val", rot_val_acc, epoch)
-
-    # Save the best model
-    if (Best_Acc_Val < val_acc) and args.SaveModel:
-        Best_Acc_Val = val_acc
-        Best_Epoch = epoch
-        if epoch % 1 == 0:
-            if not os.path.exists(args.snapshot):
-                os.mkdir(args.snapshot)
-
-            if eventHead.trainable:
-                torch.save(eventHead.state_dict(), os.path.join(
-                    args.snapshot,
-                    hp_string + "_eventHead_" + "_epoch" + str(epoch) + ".pth"))
-
-            torch.save(netG.state_dict(),
-                       os.path.join(args.snapshot, hp_string + "_netG_" + "_epoch" + str(epoch) + ".pth"))
-
-            torch.save(netF.state_dict(), os.path.join(args.snapshot, hp_string + "_netF_"  + "_epoch" + str(epoch) + ".pth"))
-            if args.weight_rot > 0.0:
-                torch.save(netF_rot.state_dict(),
-                       os.path.join(args.snapshot, hp_string + "_netF_rot_" + "_epoch" + str(epoch) + ".pth"))
-
-print("The Best Acc: ", Best_Acc_Val)
-print("Epoch: ", Best_Epoch)
 
 
 print("Starting Test on target...")
-# Val target
 test_target_loader_iter = IteratorWrapper(test_loader_target)
 with EvaluationManager(net_list), tqdm(total=len(test_loader_target), desc="TestRecS") as pb:
     test_target_loader_iter = iter(test_loader_target)
@@ -550,5 +387,5 @@ with EvaluationManager(net_list), tqdm(total=len(test_loader_target), desc="Test
     test_loss = test_loss / num_predictions
     print("Test Target accuracy (recognition): {}".format(test_acc))
     with open(os.path.join(os.path.join(args.experiment, hp_string), 'val_precision.txt'), 'a+') as f:
-        f.write("[%d/%d]\tAcc_Test: %.4f%%\n" %
-                (epoch,args.epoch,test_acc))
+        f.write("Acc_Test: %.4f%%\n" %
+                (test_acc))
